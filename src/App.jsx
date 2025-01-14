@@ -7,12 +7,14 @@ import DeleteBook from "./pages/DeleteBook";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import VerifyEmail from "./pages/VerifyEmail";
+import Smaple from "./pages/Smaple";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/sample" element={<Smaple />} />
         <Route path="/home" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/verify" element={<VerifyEmail />} />
