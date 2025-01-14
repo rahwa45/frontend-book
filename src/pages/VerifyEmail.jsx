@@ -1,27 +1,36 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
 const VerifyEmail = () => {
-  const { token } = useParams(); // Get the token from the URL params
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
 
+  // Extract the query parameter 'token' from the URL
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+  const token = query.get("token");
+
   useEffect(() => {
-    // Send the token to the backend for verification
-    axios
-      .get(`http://localhost:5555/user/verify/${token}`)
-      .then(() => {
+    const verifyEmail = async () => {
+      try {
+        // Send the token to the backend for verification
+        await axios.get(
+          `https://backend-6wvj.onrender.com/user/verify?token=${token}`
+        );
         enqueueSnackbar("Email verified successfully!", { variant: "success" });
         navigate("/");
-      })
-
-      .catch(() => {
+      } catch (error) {
         enqueueSnackbar("Invalid or expired token", { variant: "error" });
-      })
-      .finally(() => setLoading(false));
+        console.error("Verification error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (token) verifyEmail(); // Call verifyEmail only if token is defined
   }, [token, enqueueSnackbar, navigate]);
 
   return (
